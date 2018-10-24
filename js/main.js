@@ -73,38 +73,38 @@ var lang = {
         gr_text: "Qadrli muxlislar, men bu dasturni sizga foydalanish qulay bo`lishi uchun baholi qudrat harakat qildim va bunda davom etmoqdaman. Maqsadimiz yuqori sifatli dasturlar taklif qilish va haqiqatni shu yo`l bilan yetkazish. <br>Dastur insonning mehnati, bilimi va harakati evaziga keladigan narsadir. Uni haqqini qo`lingizdan kelganicha qo`llab quvvatlash va tanishlaringizga ham ulashish orqali ado qiling. <br> Olloh Taolo sizdan va bizdan har bir xayrli amalimizni qabul qilsin."
     },
     russian: {
-        home_title: "????",
-        settings: "?????????",
-        about: "? ?????????",
-        main_page: "???????? ????",
-        settings_page: "?????????",
-        menu_language: "???? ????",
-        text_settings: "????????? ?????????",
-        comments: "???????????",
-        about_page: "?? ??????",
-        surah_title: "????: ",
-        loading: "????????...",
-        data_load_error_message: "????????? ????????",
-        dle_title: "?????? ??? ????????",
-        toast_disabled: "????? ?????????",
-        close_app: "?? ?????? ??????? ???????????",
-        close_app_title: "?????",
-        adpop: "?????????? ??????????. ???????? ????????????? ??????",
-        close_app_buttons: ["??", "???"],
-        playposition_text: "????????? ????????? ???????",
-        first_message: ["??????? ??????", "?????????? ?????<br>??????????<br>?????????? ? ????????? ??????? ?????? ? ?????"],
-        greeting: "???????? ???????",
-        bookmark_found_message: "???????? ??????? ?? ?????: ",
-        chapter_loaded: "?????? ??? ???? ????? ?????? ?????????, ? ????????? ???? ????? ???? ????????? ????? ?? ???????",
-        choose_chapter: "???????, ????? ??????? ????",
-        gr_text: "??????? ?????? ? ??????, ? ?????????? ????? ??? ????????? ????? ???????? ?????? ? ??????????? ? ??? ??? ????????? ??????. <br>??? ???? ??????????????? ?????? ???? ??????????? ????? ??????.<br>?????????? ???????? ??????????? ?????? ? ???????? ????? ????????. <br>????? ????????? ?? ????? ??????????? ??????? ?? ????? ???????????. ?????????????? ?? ?????.<br>?????????? ?????????? ? ???????? ? ????????????, ????? ? ??? ??????, ????? ? ?????? ??????."
+        home_title: "Суры",
+        settings: "Установки",
+        about: "О программе",
+        main_page: "Выберите Суру",
+        settings_page: "Установки",
+        menu_language: "Язык меню",
+        text_settings: "Текстовые установки",
+        comments: "Комментарии",
+        about_page: "От Автора",
+        surah_title: "Сура: ",
+        loading: "Загрузка...",
+        data_load_error_message: "Повторить попытку?",
+        dle_title: "Ошибка при загрузке",
+        toast_disabled: "Опция отключена",
+        close_app: "Вы хотите закрыть приложение?",
+        close_app_title: "Выход",
+        adpop: "Посмотрите объявление. Средство благодарности автору",
+        close_app_buttons: ["Да", "нет"],
+        playposition_text: "сохранена последняя позиция",
+        first_message: ["Новости версии", "Автономный режим<br>Аудиоплеер<br>Продолжить с последней позиции текста и аудио"],
+        greeting: "Ассаляму аляйкум",
+        bookmark_found_message: "Закладка найдена на стихе: ",
+        chapter_loaded: "Теперь эту суру можно читать автономно, а остальные суры могут быть загружены таким же образом",
+        choose_chapter: "Нажмите, чтобы выбрать суру",
+        gr_text: "Дорогие братья и сестры, я постарался чтобы эта программа стала наиболее удобна в пользовании и все еще продолжаю работу. <br>Моя цель расспространить верный путь посредством своей работы.<br>Приложение является результатом знаний и упорного труда человека. <br>Аллах Субханаху ва Таала вознаградит каждого за вклад обязательно. Присоединитесь же своим.<br>Пожалуйста поделитесь с друзьями и приобретайте, чтобы я мог дальше, лучше и больше писать."
     }
 };
 
 ons.ready(function () {
     console.log("Onsen UI is ready!");
-    
-    
+
+
     if (Boolean(localStorage.language))
     {
         language = localStorage.menu_language;
@@ -114,57 +114,58 @@ ons.ready(function () {
     }
     document.querySelector('#navigator').pushPage("home.html");
     document.addEventListener("deviceready", function () {
-    window.FirebasePlugin.getToken(function (token) {
-        // save this server-side and use it to push notifications to this device
-        console.log("Device ready token", token);
-        deviceready = true;
-    }, function (error) {
-        console.error(error);
-    });
+        initAd();
+        window.FirebasePlugin.getToken(function (token) {
+            // save this server-side and use it to push notifications to this device
+            console.log("Device ready token", token);
+            deviceready = true;
+        }, function (error) {
+            console.error(error);
+        });
 
-    // Get notified when a token is refreshed
-    window.FirebasePlugin.onTokenRefresh(function (token) {
-        // save this server-side and use it to push notifications to this device
-        console.log("Refresh to get new token: " + token);
-    }, function (error) {
-        alert(error);
-    });
+        // Get notified when a token is refreshed
+        window.FirebasePlugin.onTokenRefresh(function (token) {
+            // save this server-side and use it to push notifications to this device
+            console.log("Refresh to get new token: " + token);
+        }, function (error) {
+            alert(error);
+        });
 
-    // Get notified when the user opens a notification
-    window.FirebasePlugin.onNotificationOpen(function (notification) {
-        console.log(JSON.stringify(notification));
-        ons.notification.alert(notification.body);
-    }, function (error) {
-        console.error(error);
-    });
-    initAd();
-
-    for (i in languages)
-    {
-        languages[i] = JSON.parse(languages[i]);
-    }
-
-    ons.setDefaultDeviceBackButtonListener(function (event) {
-        ons.notification.confirm({
-            message: lang[language].close_app,
-            title: lang[language].close_app_title,
-            buttonLabels: lang[language].close_app_buttons,
-            animation: 'default', // or 'none'
-            primaryButtonIndex: 1,
-            cancelable: true,
-            callback: function (index) {
-                // -1: Cancel
-                // 0-: Button index from the left
-                console.log(index, "index");
-                if (index == 0) { // OK button                    
-                    navigator.app.exitApp(); // Close the app
-                }
-            }
+        // Get notified when the user opens a notification
+        window.FirebasePlugin.onNotificationOpen(function (notification) {
+            console.log(JSON.stringify(notification));
+            ons.notification.alert(notification.body);
+        }, function (error) {
+            console.error(error);
         });
 
 
-    });
-}, false);
+        for (i in languages)
+        {
+            languages[i] = JSON.parse(languages[i]);
+        }
+
+        ons.setDefaultDeviceBackButtonListener(function (event) {
+            ons.notification.confirm({
+                message: lang[language].close_app,
+                title: lang[language].close_app_title,
+                buttonLabels: lang[language].close_app_buttons,
+                animation: 'default', // or 'none'
+                primaryButtonIndex: 1,
+                cancelable: true,
+                callback: function (index) {
+                    // -1: Cancel
+                    // 0-: Button index from the left
+                    console.log(index, "index");
+                    if (index == 0) { // OK button                    
+                        navigator.app.exitApp(); // Close the app
+                    }
+                }
+            });
+
+
+        });
+    }, false);
 });
 
 
@@ -174,7 +175,11 @@ document.addEventListener('init', function (event) {
     console.log(page.id); // can detect which page
     //
     //resetDate();
-    
+    try {
+        //titialFunc();
+    } catch (e) {
+        console.log(e);
+    }
     switch (page.id)
     {
         case "titles":
@@ -198,27 +203,27 @@ document.addEventListener('init', function (event) {
                     }
                 });
             }
-            
+
             break;
         case "surah_text":
             select_surah();
             //showBannerFunc();
             if (deviceready) {
-                
+                window.plugins.AdMob.destroyBannerView();
             }
             break;
         case "settings":
             set_settings();
             if (deviceready)
             {
-                
+                showBannerFunc();
             }
             break;
         case "about":
             set_about_page();
             if (deviceready)
             {
-               
+                showBannerFunc();
             }
 
             break;
@@ -239,7 +244,7 @@ function set_settings()
     //document.querySelector("#settingstitle").innerHTML = lang[language].settings;
     document.querySelector("#appsettingstitle").innerHTML = lang[language].settings_page;
     document.querySelector("#menulangtitle").innerHTML = lang[language].menu_language;
-    document.querySelector("#textsettitle").innerHTML = lang[language].text_settings;    
+    document.querySelector("#textsettitle").innerHTML = lang[language].text_settings;
     document.querySelector("ons-list-item[lang-id='" + language + "']").querySelector("ons-radio").checked = true;
 
 
@@ -416,8 +421,18 @@ function audio_dialog(d)
 
 }
 
+function addListeners()
+{
+
+
+
+
+
+
+}
+
 function set_langauge()
-{    
+{
     if (event.currentTarget.querySelector("ons-radio").disabled)
     {
         ons.notification.toast(lang[language].toast_disabled, {timeout: 500, animation: "fall"});
@@ -430,9 +445,9 @@ function set_langauge()
 
 function display_surah_names(data)
 {
-    
-        
-        
+
+
+
     for (i in data)
     {
         //data[i] = JSON.parse(data[i]);
@@ -445,7 +460,7 @@ function display_surah_names(data)
             oli.setAttribute("title", data[i].title);
             oli.setAttribute("surahNo", data[i].chapterId);
             oli.setAttribute("onmouseup", "show_surah(event)");
-            oli.innerHTML = '<div class="left"><ons-row><ons-col><span class="ayah_id">'+data[i].chapterId +'</span></ons-col></ons-row></div><div class="center arabic"><ons-row><ons-col>' + data[i].title + '</ons-col></ons-row></div>';
+            oli.innerHTML = '<div class="left"><ons-row><ons-col><span class="ayah_id">' + data[i].chapterId + '</span></ons-col></ons-row></div><div class="center arabic"><ons-row><ons-col>' + data[i].title + '</ons-col></ons-row></div>';
         } else if (data[i]["languageNo"] != 1 && data[i].title != undefined) {
             oli.innerHTML += "<ons-row><ons-col>" + data[i].title + "</ons-col></ons-row>";
             document.getElementById("main_table").appendChild(oli);
@@ -458,8 +473,8 @@ function display_surah_names(data)
         window.plugins.AdMob.destroyBannerView();
 
     }
-    document.querySelector("#selectsurahtitle").innerHTML = lang[language].home_title;    
-    
+    document.querySelector("#selectsurahtitle").innerHTML = lang[language].home_title;
+
 }
 
 function show_surah()
@@ -491,7 +506,50 @@ function set_languages(event)
     });
 }
 
-function showAboutAd(){
+//initialize the goodies
+function initAd() {
+    admob.banner.config({
+        id: 'ca-app-pub-3838820812386239/6533462802',
+    })
+
+// Create banner
+    admob.banner.prepare()
+
+// Show the banner
+
+
+// Hide the banner
+//admob.banner.hide()
+
+// Remove the banner
+//admob.banner.remove()
+    admob.interstitial.config({
+        id: 'ca-app-pub-3838820812386239/2551267023'
+    })
+
+    admob.interstitial.prepare()
+
+    
+}
+//functions to allow you to know when ads are shown, etc.
+
+//display the banner
+function showBannerFunc() {
+    admob.banner.show();
+}
+
+//display the interstitial
+function showInterstitialFunc() {    
+    try{
+    admob.interstitial.show();
+    }
+    catch(e)
+    {
+        
+    }
+
+}
+function showAboutAd() {
     showPopover($("#adpop")[0]);
     document.getElementById("poptext").innerHTML = lang[language].adpop;
 }
@@ -513,39 +571,37 @@ $(window).ready(function () {
 
     document.querySelector('ons-navigator').addEventListener('prepop', function () {
         console.log("prepop");
-        try{
+        try {
             $("#surahaudio")[0].pause();
-        }
-        catch (e){
-            
+        } catch (e) {
+
         }
     });
-    
+
     document.querySelector('ons-navigator').addEventListener('postpop', function () {
         //console.log("postpop", event.enterPage);
-        try{
-        
-    }
-        catch (exception) {
+        try {
+            //showInterstitialFunc();
+        } catch (exception) {
             console.log(exception);
         }
 
         switch (event.enterPage.getAttribute("id"))
-    {
-        case "titles":
-            //console.log("surah title list");
-            document.querySelector("#selectsurahtitle").innerHTML = lang[language].home_title;
-            break;
-        case "surah_text":
-            
-            break;
-        case "settings":
-            
-            break;
-        case "about":
-            
-            break;
-    }
+        {
+            case "titles":
+                //console.log("surah title list");
+                document.querySelector("#selectsurahtitle").innerHTML = lang[language].home_title;
+                break;
+            case "surah_text":
+
+                break;
+            case "settings":
+
+                break;
+            case "about":
+
+                break;
+        }
     });
 });
 
